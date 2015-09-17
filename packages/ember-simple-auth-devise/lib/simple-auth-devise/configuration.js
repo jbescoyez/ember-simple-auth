@@ -4,7 +4,8 @@ var defaults = {
   serverTokenEndpoint:         '/users/sign_in',
   resourceName:                'user',
   tokenAttributeName:          'token',
-  identificationAttributeName: 'email'
+  identificationAttributeName: 'email',
+  contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
 };
 
 /**
@@ -72,6 +73,21 @@ export default {
     @default 'email'
   */
   identificationAttributeName: defaults.identificationAttributeName,
+
+  /**
+    The content type of the request  that is sent to
+    [serverTokenEndpoint](#SimpleAuth-Configuration-Devise-serverTokenEndpoint)
+    during the authentication process. The value can be changed to
+    'application/json; charset=UTF-8'. In this case, the body of the request
+    will be serialized into JSON.
+
+    @property contentType
+    @readOnly
+    @static
+    @type String
+    @default 'application/x-www-form-urlencoded; charset=UTF-8'
+  */
+  contentType: defaults.contentType,
 
   /**
     @method load

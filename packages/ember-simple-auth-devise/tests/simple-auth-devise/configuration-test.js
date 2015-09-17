@@ -53,6 +53,12 @@ describe('Configuration', function() {
 
       expect(Configuration.tokenAttributeName).to.eql('tokenAttributeName');
     });
+
+    it('sets contentType correctly', function() {
+      Configuration.load(this.container, { contentType: 'contentType' });
+
+      expect(Configuration.contentType).to.eql('contentType');
+    });
   });
 
   afterEach(function() {

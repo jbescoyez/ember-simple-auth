@@ -69,6 +69,18 @@ export default Base.extend({
   identificationAttributeName: 'email',
 
   /**
+    The request content type.
+
+    This value can be configured via
+    [`SimpleAuth.Configuration.Devise#contentType`](#SimpleAuth-Configuration-Devise-contentType).
+
+    @property contentType
+    @type String
+    @default 'contentType'
+  */
+  contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+
+  /**
     @method init
     @private
   */
@@ -77,6 +89,7 @@ export default Base.extend({
     this.resourceName                 = Configuration.resourceName;
     this.tokenAttributeName           = Configuration.tokenAttributeName;
     this.identificationAttributeName  = Configuration.identificationAttributeName;
+    this.contentType                  = Configuration.contentType;
   },
 
   /**
@@ -150,13 +163,25 @@ export default Base.extend({
   */
   makeRequest: function(data, resolve, reject) {
     return Ember.$.ajax({
-      url:        this.serverTokenEndpoint,
-      type:       'POST',
-      data:       data,
-      dataType:   'json',
+      url:         this.serverTokenEndpoint,
+      type:        'POST',
+      data:        this.formatData(data),
+      contentType: this.contentType,
+      dataType:    'json',
       beforeSend: function(xhr, settings) {
         xhr.setRequestHeader('Accept', settings.accepts.json);
       }
     });
+  },
+
+  /**
+    @method formatData
+    @private
+  */
+  formatData: function (data) {
+    if (/application\/json/.test(this.contentType)) {
+      return JSON.stringify(data);
+    }
+    return data;
   }
 });

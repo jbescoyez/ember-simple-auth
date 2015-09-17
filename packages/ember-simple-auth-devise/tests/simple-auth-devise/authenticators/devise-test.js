@@ -88,13 +88,39 @@ describe('Devise', function() {
       Ember.run.next(function() {
         var args = Ember.$.ajax.getCall(0).args[0];
         delete args.beforeSend;
+
         expect(args).to.eql({
           url:      '/users/sign_in',
           type:     'POST',
           data:     { user: { email: 'identification', password: 'password' } },
+          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
           dataType: 'json',
         });
         done();
+      });
+    });
+
+    context('when contentType has been changed to \'application/json; charset=UTF-8\'', function () {
+      beforeEach(function () {
+        Configuration.contentType = 'application/json; charset=UTF-8';
+        this.authenticator = Devise.create();
+      });
+
+      it('sends an AJAX request to the sign in endpoint', function(done) {
+        this.authenticator.authenticate({ identification: 'identification', password: 'password' });
+
+        Ember.run.next(function() {
+          var args = Ember.$.ajax.getCall(0).args[0];
+          delete args.beforeSend;
+          expect(args).to.eql({
+            url:      '/users/sign_in',
+            type:     'POST',
+            data:     '{"user":{"password":"password","email":"identification"}}',
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json',
+          });
+          done();
+        });
       });
     });
 
